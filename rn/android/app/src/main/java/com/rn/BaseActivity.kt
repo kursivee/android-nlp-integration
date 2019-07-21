@@ -1,6 +1,9 @@
 package com.rn
 
+import android.content.Context
 import android.os.Bundle
+import android.view.inputmethod.EditorInfo
+import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.android.material.snackbar.Snackbar
@@ -27,25 +30,41 @@ class BaseActivity : AppCompatActivity() {
                 callback = {
                     GlobalScope.launch(Dispatchers.Main) {
                         val adapter = MoshiProvider.moshi.adapter(NodeNlpResponse::class.java)
-                        tv_message.text = adapter.fromJson(it).toString()
+                        tv_message.text = adapter.fromJson(it)?.answer
                     }
                 }
             }
         })
-        fab.setOnClickListener { view ->
+        btn_send.setOnClickListener { view ->
             (application as MainApplication)
                     .reactNativeHost
                     .reactInstanceManager
                     .currentReactContext
                     ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                    ?.emit("text", "Hello")
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show()
+                    ?.emit("text", et_message.text.toString())
+            hideKeyboard()
+        }
+        et_message.setOnEditorActionListener { textView, i, keyEvent ->
+            if(EditorInfo.IME_ACTION_DONE == i) {
+                (application as MainApplication)
+                        .reactNativeHost
+                        .reactInstanceManager
+                        .currentReactContext
+                        ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                        ?.emit("text", textView.text.toString())
+                hideKeyboard()
+            }
+            true
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         SubscriberManager.subscribers.remove(subscriberKey)
+    }
+
+    private fun hideKeyboard() {
+        val imm = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        imm!!.hideSoftInputFromWindow(currentFocus!!.windowToken, 0)
     }
 }
