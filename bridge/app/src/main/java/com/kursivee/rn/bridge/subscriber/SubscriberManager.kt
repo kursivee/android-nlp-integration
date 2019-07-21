@@ -1,7 +1,5 @@
 package com.kursivee.rn.bridge.subscriber
 
 object SubscriberManager {
-    val subscribers = mutableMapOf(
-        "MOCK" to MockSubscriber()
-    )
+    val subscribers = mutableMapOf<String, Subscriber<*>>()
 }
