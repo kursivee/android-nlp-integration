@@ -29,6 +29,9 @@ build/
 .gradle
 local.properties
 *.iml
+**/node_modules*
+**/index.android.bundle
+/android/app/src/main/res/raw/app.json
 
 # node.js
 #
