@@ -195,7 +195,18 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     implementation "com.facebook.react:react-native:0.60.4"  // From node_modules
     implementation "com.kursivee.rn:bridge:0.1.0-SNAPSHOT"
+    implementation 'com.facebook.infer.annotation:infer-annotation:0.17.0'
     implementation 'com.facebook.soloader:soloader:0.6.0'
+    // Fix for okhttp builder
+    implementation 'com.squareup.okhttp3:okhttp:4.0.1'
+    // Fix for okhttp JavaNetCookieJar
+    implementation 'com.squareup.okhttp3:okhttp-urlconnection:4.0.1'
+    // Fix for com.facebook.common.logging.FLog
+    implementation 'com.facebook.fresco:fresco:2.0.0'
+    // Fix for com.facebook.imagepipeline.backends.okhttp3.OkHttpImagePipelineConfigFactory
+    implementation 'com.facebook.fresco:imagepipeline-okhttp3:2.0.0'
+    // Fix for javax.inject.provider
+    implementation 'javax.inject:javax.inject:1'
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermesvm/android/";
