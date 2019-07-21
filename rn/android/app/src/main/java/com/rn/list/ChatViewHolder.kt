@@ -12,16 +12,18 @@ import android.view.View
 
 class ChatViewHolder(private val layout: LinearLayout): RecyclerView.ViewHolder(layout) {
     val textView: TextView = layout.findViewById(R.id.tv_chat_message)
+    val tv_profile: TextView = layout.findViewById(R.id.tv_profile)
 
     fun onBind(chatMessage: ChatMessage) {
         textView.text = chatMessage.message
         if(chatMessage.isResponse) {
             layout.gravity = Gravity.START
             textView.backgroundTintList = ColorStateList.valueOf(layout.context.resources.getColor(R.color.blue, layout.context.theme))
+            tv_profile.visibility = View.VISIBLE
         } else {
             layout.gravity = Gravity.END
             textView.backgroundTintList = ColorStateList.valueOf(layout.context.resources.getColor(R.color.gray, layout.context.theme))
-
+            tv_profile.visibility = View.GONE
         }
     }
 }
