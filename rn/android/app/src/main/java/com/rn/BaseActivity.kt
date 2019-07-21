@@ -6,20 +6,17 @@ import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.kursivee.rn.bridge.nlp.NodeNlpResponse
 import com.kursivee.rn.bridge.subscriber.SubscriberManager
 import com.rn.adapter.MoshiProvider
 import com.rn.list.ChatAdapter
 import com.rn.list.ChatMessage
-import com.rn.list.ChatViewHolder
 import com.rn.subscriber.NlpSubscriber
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.content_base.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 class BaseActivity : AppCompatActivity() {
