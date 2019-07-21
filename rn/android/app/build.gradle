@@ -193,12 +193,14 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.facebook.react:react-native:0.60.4"  // From node_modules
     implementation "com.kursivee.rn:bridge:0.1.2-SNAPSHOT"
     implementation 'com.facebook.infer.annotation:infer-annotation:0.17.0'
     implementation 'com.facebook.soloader:soloader:0.6.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-RC'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0-RC'
+    // react-native dependencies start
+    implementation "com.facebook.react:react-native:0.60.4"
+    // If you pull react-native not from node_modules then you need the following dependencies
     // Fix for okhttp builder
     implementation 'com.squareup.okhttp3:okhttp:4.0.1'
     // Fix for okhttp JavaNetCookieJar
@@ -209,6 +211,7 @@ dependencies {
     implementation 'com.facebook.fresco:imagepipeline-okhttp3:2.0.0'
     // Fix for javax.inject.provider
     implementation 'javax.inject:javax.inject:1'
+    // react-native dependencies end
 
     if (enableHermes) {
         def hermesPath = "../../node_modules/hermesvm/android/";
