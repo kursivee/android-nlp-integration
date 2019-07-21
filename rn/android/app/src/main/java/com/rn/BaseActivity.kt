@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.google.android.material.snackbar.Snackbar
+import com.kursivee.rn.bridge.nlp.NodeNlpResponse
 import com.kursivee.rn.bridge.subscriber.SubscriberManager
+import com.rn.adapter.MoshiProvider
 import com.rn.subscriber.NlpSubscriber
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.content_base.*
@@ -24,7 +26,8 @@ class BaseActivity : AppCompatActivity() {
             NlpSubscriber().apply {
                 callback = {
                     GlobalScope.launch(Dispatchers.Main) {
-                        tv_message.text = it
+                        val adapter = MoshiProvider.moshi.adapter(NodeNlpResponse::class.java)
+                        tv_message.text = adapter.fromJson(it).toString()
                     }
                 }
             }
@@ -45,5 +48,4 @@ class BaseActivity : AppCompatActivity() {
         super.onDestroy()
         SubscriberManager.subscribers.remove(subscriberKey)
     }
-
 }
