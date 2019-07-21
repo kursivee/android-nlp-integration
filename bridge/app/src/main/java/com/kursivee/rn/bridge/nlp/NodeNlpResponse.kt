@@ -5,7 +5,7 @@ data class NodeNlpResponse(
     val localeIso2: String?,
     val language: String?,
     val utterance: String?,
-    val classification: Array<Classification>?,
+    val classifications: Array<Classification>?,
     val intent: String?,
     val score: Double?,
     val entities: Array<Entity>?,
@@ -22,10 +22,10 @@ data class NodeNlpResponse(
         if (localeIso2 != other.localeIso2) return false
         if (language != other.language) return false
         if (utterance != other.utterance) return false
-        if (classification != null) {
-            if (other.classification == null) return false
-            if (!classification.contentEquals(other.classification)) return false
-        } else if (other.classification != null) return false
+        if (classifications != null) {
+            if (other.classifications == null) return false
+            if (!classifications.contentEquals(other.classifications)) return false
+        } else if (other.classifications != null) return false
         if (intent != other.intent) return false
         if (score != other.score) return false
         if (entities != null) {
@@ -43,7 +43,7 @@ data class NodeNlpResponse(
         result = 31 * result + (localeIso2?.hashCode() ?: 0)
         result = 31 * result + (language?.hashCode() ?: 0)
         result = 31 * result + (utterance?.hashCode() ?: 0)
-        result = 31 * result + (classification?.contentHashCode() ?: 0)
+        result = 31 * result + (classifications?.contentHashCode() ?: 0)
         result = 31 * result + (intent?.hashCode() ?: 0)
         result = 31 * result + (score?.hashCode() ?: 0)
         result = 31 * result + (entities?.contentHashCode() ?: 0)
