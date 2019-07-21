@@ -193,12 +193,13 @@ repositories {
 
 dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
-    implementation "com.kursivee.rn:bridge:0.1.4-SNAPSHOT"
+    implementation "com.kursivee.rn:bridge:0.1.5-SNAPSHOT"
     implementation 'com.facebook.infer.annotation:infer-annotation:0.17.0'
     implementation 'com.facebook.soloader:soloader:0.6.0'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-RC'
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0-RC'
     implementation "com.squareup.moshi:moshi:1.8.0"
+    implementation "androidx.recyclerview:recyclerview:1.1.0-beta01"
     // react-native dependencies start
     implementation "com.facebook.react:react-native:0.60.4"
     // If you pull react-native not from node_modules then you need the following dependencies
