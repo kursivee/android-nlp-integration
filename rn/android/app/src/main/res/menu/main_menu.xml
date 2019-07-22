@@ -1,0 +1,16 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <!-- "Mark Favorite", should appear as action button if possible -->
+    <item
+        android:id="@+id/action_chat"
+        android:title="Chat"
+        app:showAsAction="never"/>
+
+    <!-- Settings, should always be in the overflow -->
+    <item android:id="@+id/action_empty"
+        android:title="Empty"
+        app:showAsAction="never"/>
+
+</menu>
