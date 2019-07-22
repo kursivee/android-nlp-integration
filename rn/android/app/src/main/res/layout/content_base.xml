@@ -30,6 +30,7 @@
         app:layout_constraintBottom_toTopOf="@+id/et_message"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:overScrollMode="never"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button

@@ -57,7 +57,6 @@ class BaseActivity : AppCompatActivity() {
                     ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
                     ?.emit("text", et_message.text.toString())
 
-            rv_chat_log.scrollToPosition((rv_chat_log.adapter as ChatAdapter).itemCount - 1)
             hideKeyboard()
         }
         et_message.setOnEditorActionListener { textView, i, keyEvent ->
@@ -69,10 +68,12 @@ class BaseActivity : AppCompatActivity() {
                         .currentReactContext
                         ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
                         ?.emit("text", textView.text.toString())
-                rv_chat_log.scrollToPosition((rv_chat_log.adapter as ChatAdapter).itemCount - 1)
                 hideKeyboard()
             }
             true
+        }
+        rv_chat_log.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
+            rv_chat_log.scrollToPosition((rv_chat_log.adapter as ChatAdapter).itemCount - 1)
         }
     }
 
