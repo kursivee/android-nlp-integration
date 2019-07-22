@@ -1,5 +1,6 @@
 # android-nlp-integration
 POC for ntegrating nodenlp into android with react-native
+This is a POC project. I know I'm missing a lot of best practices. No MVVM, DI isn't properly setup, etc. Feel free to write issues calling these out. Especially if it's JS related.
 
 ### /android
 Actual android app to run (Still in progress)
