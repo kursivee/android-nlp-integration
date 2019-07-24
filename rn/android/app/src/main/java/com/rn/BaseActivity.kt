@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.facebook.react.modules.core.DeviceEventManagerModule
@@ -18,16 +19,20 @@ import com.rn.list.ChatMessage
 import com.rn.subscriber.NlpSubscriber
 import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.content_base.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.*
 import java.io.File
 
 class BaseActivity : AppCompatActivity() {
 
     private val subscriberKey = "NAV"
     private val chatLog = mutableListOf(ChatMessage("Welcome", true))
+    private val emitter: DeviceEventManagerModule.RCTDeviceEventEmitter by lazy {
+        (application as MainApplication)
+        .reactNativeHost
+            .reactInstanceManager
+            .currentReactContext
+            ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)!!
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -52,24 +57,13 @@ class BaseActivity : AppCompatActivity() {
         })
         btn_send.setOnClickListener { view ->
             (rv_chat_log.adapter as ChatAdapter).addMessage(ChatMessage(et_message.text.toString()))
-            (application as MainApplication)
-                    .reactNativeHost
-                    .reactInstanceManager
-                    .currentReactContext
-                    ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                    ?.emit("text", et_message.text.toString())
-
+            emitter.emit("text", et_message.text.toString())
             hideKeyboard()
         }
         et_message.setOnEditorActionListener { textView, i, keyEvent ->
             if(EditorInfo.IME_ACTION_DONE == i) {
                 (rv_chat_log.adapter as ChatAdapter).addMessage(ChatMessage(et_message.text.toString()))
-                (application as MainApplication)
-                        .reactNativeHost
-                        .reactInstanceManager
-                        .currentReactContext
-                        ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                        ?.emit("text", textView.text.toString())
+                emitter.emit("text", et_message.text.toString())
                 hideKeyboard()
             }
             true
@@ -78,35 +72,23 @@ class BaseActivity : AppCompatActivity() {
             rv_chat_log.scrollToPosition((rv_chat_log.adapter as ChatAdapter).itemCount - 1)
         }
         btn_basic_nlp.setOnClickListener {
-            (application as MainApplication)
-                    .reactNativeHost
-                    .reactInstanceManager
-                    .currentReactContext
-                    ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                    ?.emit("retrain", loadFromAssets("basic.model.nlp"))
+            emitter.emit("retrain", loadFromAssets("basic.model.nlp"))
+            Toast.makeText(this, "Loading basic nlp", Toast.LENGTH_SHORT).show()
             writeToFile("basic.model.nlp")
         }
         btn_microsoft_nlp.setOnClickListener {
-            (application as MainApplication)
-                    .reactNativeHost
-                    .reactInstanceManager
-                    .currentReactContext
-                    ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                    ?.emit("retrain", loadFromAssets("microsoft.model.nlp"))
+            emitter.emit("retrain", loadFromAssets("microsoft.model.nlp"))
+            Toast.makeText(this, "Loading microsoft nlp", Toast.LENGTH_SHORT).show()
             writeToFile("microsoft.model.nlp")
         }
         GlobalScope.launch {
             delay(3000)
             readFromInternal("model.nlp")?.let {
-                println("retraining")
-                (application as MainApplication)
-                        .reactNativeHost
-                        .reactInstanceManager
-                        .currentReactContext
-                        ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
-                        ?.emit("retrain", it)
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@BaseActivity, "Loading existing nlp model", Toast.LENGTH_SHORT).show()
+                }
+                emitter.emit("retrain", it)
             }
-
         }
     }
 
