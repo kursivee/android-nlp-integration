@@ -10,6 +10,7 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.facebook.react.ReactInstanceManager
 import com.facebook.react.modules.core.DeviceEventManagerModule
 import com.kursivee.rn.bridge.nlp.NodeNlpResponse
 import com.kursivee.rn.bridge.subscriber.SubscriberManager
@@ -81,12 +82,11 @@ class BaseActivity : AppCompatActivity() {
             Toast.makeText(this, "Loading microsoft nlp", Toast.LENGTH_SHORT).show()
             writeToFile("microsoft.model.nlp")
         }
-        GlobalScope.launch {
-            delay(3000)
+
+        // Listens for onReactContextInitialized event
+        (application as MainApplication).reactNativeHost.reactInstanceManager.addReactInstanceEventListener {
             readFromInternal("model.nlp")?.let {
-                withContext(Dispatchers.Main) {
                     Toast.makeText(this@BaseActivity, "Loading existing nlp model", Toast.LENGTH_SHORT).show()
-                }
                 emitter.emit("retrain", it)
             }
         }
