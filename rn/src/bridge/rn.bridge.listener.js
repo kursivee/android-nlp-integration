@@ -6,3 +6,8 @@ DeviceEventEmitter.addListener('text', async (evt) => {
     const response = await nlp.process(evt)
     RnBridge.publish("NAV", JSON.stringify(response))
 })
+
+DeviceEventEmitter.addListener('retrain', async (evt) => {
+    nlp.clear()
+    nlp.import(evt)
+})

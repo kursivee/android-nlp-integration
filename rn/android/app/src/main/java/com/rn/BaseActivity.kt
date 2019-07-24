@@ -20,7 +20,9 @@ import kotlinx.android.synthetic.main.activity_base.*
 import kotlinx.android.synthetic.main.content_base.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.io.File
 
 class BaseActivity : AppCompatActivity() {
 
@@ -75,6 +77,43 @@ class BaseActivity : AppCompatActivity() {
         rv_chat_log.addOnLayoutChangeListener { _, _, _, _, _, _, _, _, _ ->
             rv_chat_log.scrollToPosition((rv_chat_log.adapter as ChatAdapter).itemCount - 1)
         }
+        btn_basic_nlp.setOnClickListener {
+            (application as MainApplication)
+                    .reactNativeHost
+                    .reactInstanceManager
+                    .currentReactContext
+                    ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                    ?.emit("retrain", loadFromAssets("basic.model.nlp"))
+            writeToFile("basic.model.nlp")
+        }
+        btn_microsoft_nlp.setOnClickListener {
+            (application as MainApplication)
+                    .reactNativeHost
+                    .reactInstanceManager
+                    .currentReactContext
+                    ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                    ?.emit("retrain", loadFromAssets("microsoft.model.nlp"))
+            writeToFile("microsoft.model.nlp")
+        }
+        GlobalScope.launch {
+            delay(3000)
+            readFromInternal("model.nlp")?.let {
+                println("retraining")
+                (application as MainApplication)
+                        .reactNativeHost
+                        .reactInstanceManager
+                        .currentReactContext
+                        ?.getJSModule(DeviceEventManagerModule.RCTDeviceEventEmitter::class.java)
+                        ?.emit("retrain", it)
+            }
+
+        }
+    }
+
+    private fun loadFromAssets(fileName: String): String {
+        return application.assets.open(fileName).bufferedReader().use{
+            it.readText()
+        }
     }
 
     override fun onDestroy() {
@@ -103,4 +142,18 @@ class BaseActivity : AppCompatActivity() {
         }
         return super.onOptionsItemSelected(item)
     }
+
+    private fun writeToFile(filePath: String) {
+        applicationContext.openFileOutput("model.nlp", Context.MODE_PRIVATE).use {
+            it.write(loadFromAssets(filePath).toByteArray())
+        }
+    }
+
+    private fun readFromInternal(filePath: String): String? =
+        try {
+            val file = File(applicationContext.filesDir, filePath)
+            file.readText()
+        } catch(e: Throwable) {
+            null
+        }
 }
